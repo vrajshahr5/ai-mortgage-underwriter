@@ -18,8 +18,9 @@ Thumbs.db
 # Streamlit
 .streamlit/
 
-# Model artifacts
+# Ignore all pkl files EXCEPT the production model
 ml/*.pkl
+!ml/mortgage_underwriter_model.pkl
 
 # Logs
 *.log
