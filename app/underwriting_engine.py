@@ -2,7 +2,9 @@ from app.schemas import MortgageApplicationCreate,UnderWritingDecisionResponse
 import pandas as pd
 import joblib
 
-MODEL_PATH = "ml/mortgage_underwriter_model.pkl"
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / "ml" / "mortgage_underwriter_model.pkl"
+
 model = joblib.load(MODEL_PATH)
 
 def evaluate_application(application: MortgageApplicationCreate):
