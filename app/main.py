@@ -10,6 +10,12 @@ app = FastAPI(
 def underwrite_application(application: MortgageApplicationCreate):
     return evaluate_with_ml(application)
 
+@app.get("/")
+def root():
+    return {"message": "API Mortgage Underwriting Service is running."}
+
+
+
 
 
 
