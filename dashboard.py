@@ -4,6 +4,7 @@ import shap
 import matplotlib.pyplot as plt
 import joblib
 import pandas as pd
+import os
 
 st.title("AI Mortgage Underwriting Dashboard")
 st.write("Enter borrower details to get an underwriting evaluation.")
@@ -26,7 +27,10 @@ if st.button("Evaluate Application"):
         "property_value": property_value,
         "employment_status": employment_status
     }
-    response = requests.post("http://mortgage-api:8000/underwrite", json=payload)
+
+    API_URL = os.getenv("API_URL", "https://ai-mortgage-underwriter.onrender.com")
+
+    response = requests.post(f"{API_URL}/underwrite", json=payload, timeout=10)
 
     st.subheader("Underwriting Result")
     if response.status_code == 200:
