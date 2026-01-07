@@ -140,6 +140,7 @@ The Streamlit dashboard communicates with the FastAPI service over HTTPS using J
 
 + https://ai-mortgage-underwriter.onrender.com (FastAPI Backend)
 + https://ai-mortgage-underwriter-dashboard.onrender.com (Streamlit Frontend)
++ Deployed using Docker container based infrastructure
 
 
 
