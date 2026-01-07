@@ -138,8 +138,10 @@ Deployment
 -
 The Streamlit dashboard communicates with the FastAPI service over HTTPS using JSON REST requests. Both components are independently debloyable and can be tested in isolation. 
 
-+ https://ai-mortgage-underwriter.onrender.com
-+ https://ai-mortgage-underwriter-dashboard.onrender.com
++ https://ai-mortgage-underwriter.onrender.com (FastAPI Backend)
++ https://ai-mortgage-underwriter-dashboard.onrender.com (Streamlit Frontend)
+
+
 
 
 
