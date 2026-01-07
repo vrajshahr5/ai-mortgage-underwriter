@@ -28,9 +28,11 @@ if st.button("Evaluate Application"):
         "employment_status": employment_status
     }
 
-    API_URL = os.getenv("API_URL", "https://ai-mortgage-underwriter.onrender.com")
+    API_URL = os.getenv("API_URL")
+    if not API_URL:
+        raise RuntimeError("API_URL environment variable not set.")
 
-    response = requests.post(f"{API_URL}/underwrite", json=payload, timeout=10)
+    response = requests.post(f"{API_URL}/underwrite", json=payload, timeout=60)
 
     st.subheader("Underwriting Result")
     if response.status_code == 200:
