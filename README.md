@@ -79,7 +79,7 @@ Technology Stack
 
 Machine Learning
 -
-+ scikit-learn
++ Scikit-learn
 + Pandas and Numpy
 + SHAP
 + Column Transformer and Pipeline
