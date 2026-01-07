@@ -1,49 +1,48 @@
-🏦 AI Mortgage Underwriting System
+AI Mortgage Underwriter
+-
+A production style AI powered mortgage underwriting platform that combines deterministic credit rules, a machine learning risk model, and SHAP based explainability. The system is exposed thorugh a FastAPI backend and evaluated using an interactive Streamlit dashboard.
 
-A production style AI-powered mortgage underwriting platform that combines rule-based credit logic, machine learning risk prediction, and model explainability(SHAP) - exposed via a FastAPI backend with an interactive Streamlit dashboard.
+The goal of this project is to provide a realistic simulation of an automated underwriting workflow suitable for enterprise or fintech enviornments.
 
-🚀 Features
+Key Features 
+-
+Hybrid Decision System Integrates rule based logic with ML predictions,
+Rule based Underwriting engine Evaluates credit score, LTV, DTI, down payement and employment stability,
+Machine Learning Default Risk Predicition Logistic Regression model trained on synthetic borrower data,
+Model Explainabilty Shap visualizations show feature contributions of each borrower,
+Rest API backend FastAPI service for standardized evaluations,
+Interactive Frontend Streamlit dashboard for real time demonstration,
+Model Persistance Trained models and preprocessors are serialized with joblib,
+Extensible Architecture Designed to support additonal models or real datasets in the future.
 
+The deterministic engine calculates and applies risk adjustments based on:
+- 
++ Credit Score 
++ Loan to Value ratio
++ Debt to income ratio
++ Minimum down payment
++ Employment status
 
-✅ Rule-Based underwriting engine (credit score, LTV,DTI,employment)
-🤖 Machine Learning default risk prediction(Logistic Regression)
-📊 SHAP explainability (feature attribution & decision breakdown)
-🌐 FASTAPI REST API
-🖥️ Streamlit Dashboard for live simulation
-♻️ Hybrid decision system (Rules + ML)
-📦 Model persistance and interface pipeline
+| Risk Score Range | Result                          |
+|------------------|---------------------------------|
+| ≥ 50             | Application Denied              |
+| 25 – 49          | Refer / Conditional Approval    |
+| < 25             | Application Approved            |
 
+Machine Learning Model
+-
+Algorithm Logistic Regression
+Training Data 5000 synthetic mortgage applications
+Preprocessing Standard scaling for numeric inputs and one hot encoding for categorical inputs
+Outputs Default risk class, Probability of Default, SHAP feature attributions.
 
-📊 Decision Logic
+API Example
+-
+POST /underwrite
 
-Rule Based Factors
--Credit Score
--Loan to Value
--Debt to Income
--Down Payment
--Employment Status
+**Sample Request**
 
-ML Model
--Logisitic Regression
--Synthetic training data
--Outputs:
--Default class (0/1)
--Default probability
-
-Final Decision
-
-Condition              Outcome
-High Risk              Denied
-Moderate Risk          Refer/Conditional
-Low Risk               Approved
-
-SHAP Explainability
--Feature Importance visualization
--Borrower Specific Breakdown
--Transparent ML decision support (enterprise-Grade)
-
-🧪 Example API request
-Post Underwrite
+```json
 {
     "annual_income": 85000,
     "credit_score": 720,
@@ -52,57 +51,104 @@ Post Underwrite
     "property_value": 420000,
     "employment_status": "employed"
 }
+```
 
-📦 Tech Stack
+**Sample Response**
 
-Backend
--FASTAPI
--Pydantic
--Uvicorn
+```json
+{
+    "decision": "approved",
+    "risk_score": 22,
+    "reasons": ["Credit score between 700 and 749"],
+    "conditions": [],
+    "explanation": {
+        "rule_engine": { "...": "details omitted" },
+        "ml_default_probability": 0.07
+    }
+}
+```
+
+---
+
+Technology Stack
+-
++ FastAPI
++ Pydantic Models
++ Uvicorn
++ Joblib
 
 Machine Learning
--scikit-learn
--pandas/numpy
--SHAP
--joblib
+-
++ scikit-learn
++ Pandas and Numpy
++ SHAP
++ Column Transformer and Pipeline
 
 Frontend
--Streamlit
+-
++ Streamlit
++ HTTP integration with requests
 
-⚙️Setup Instructions
+Setup and Usage
+-
+Clone the repository:
 
-pyhton -m venv venv
+```bash
+git clone https://github.com/vrajshahr5/AI-Mortgage-Underwriter.git
+cd AI-Mortgage-Underwriter
+```
+```bash
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# Linux / macOS
 source venv/bin/activate
+```
 
-Install Dependencies
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-Train ML Model
+Train the ML model:
+
+```bash
 python -m ml.train_model
+```
 
-Start API
+Start the FastAPI backend:
+
+```bash
 uvicorn app.main:app --reload
+```
 
-Run Dashboard
+Run the Streamlit dashboard:
+
+```bash
 streamlit run dashboard.py
+```
 
-Future Improvements 🔮
--Support additional ML models 
--Persist Underwriting decisions in a database
--Integrate authentication and role based access control
--Synthetic training data converted with historical loan data
+---
 
-License 
-
-MIT License
+Project Structure
+-![IMG_3661](https://github.com/user-attachments/assets/53313a9f-5dcf-4459-a908-998fdf2bc2dd)
 
 Deployment
+-
 
--Backend: Dockerized FastAPI service
--Frontend: Streamlit Dashboard
--Deployed using container based cloud infrastructure
 
-Both services run independently and communicate over HTTP.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
