@@ -4,9 +4,12 @@ import pandas as pd
 import joblib
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 MODEL_PATH = BASE_DIR / "ml" / "mortgage_underwriter_model.pkl"
+SNAP_PATH = BASE_DIR / "ml" / "shap_explainer.pkl"
 
 model = joblib.load(MODEL_PATH)
+shap_explainer = joblib.load(SNAP_PATH)
 
 def evaluate_application(application: MortgageApplicationCreate):
 
@@ -73,7 +76,24 @@ def predict_default_risk_ml(application):
     class_prediction = int(model.predict(input_data)[0]) 
     prob_default = float(model.predict_proba(input_data)[0][1])
 
-    return class_prediction, prob_default
+    return class_prediction, prob_default,input_df
+
+def exaplain_with_shap(application):
+    """
+    Returns pre feature SHAP impact values as a JSON-safe dict
+    """
+    input_df = pd.DataFrame([{
+        "credit_score": application.credit_score,
+        "loan_amount": application.loan_amount,
+        "property_value": application.property_value,
+        "monthly_income": application.annual_income / 12,
+        "monthly_debt": application.monthly_debt,
+        "employment_status": application.employment_status
+    }])
+    shap_values = shap_explainer(input_df)
+
+
+
 
 
 def evaluate_with_ml(application: MortgageApplicationCreate):
