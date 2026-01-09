@@ -107,6 +107,24 @@ Rule Based Decision Logic
 | 25 – 49 | Refer / Manual Review |
 | < 25 | Approved |
 
+Machine Learning Pipeline
+-
+
+Algorithm: Logistic Regression
+
+Preprocessing
+-
+
++ Standard scaling (numerical features)
+
++ One-hot encoding (categorical features)
+
+Explainability
+-
++ SHAP feature attribution
+
++ Human-readable explanation summaries
+
 
 
 
