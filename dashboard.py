@@ -1,11 +1,9 @@
 import streamlit as st
 import requests
-import shap
-import matplotlib.pyplot as plt
-import joblib
 import pandas as pd
 import os
 
+st.set_page_config(page_title="AI Mortgage Underwriting Dashboard", layout = "centered")
 st.title("AI Mortgage Underwriting Dashboard")
 st.write("Enter borrower details to get an underwriting evaluation.")
 st.subheader("Borrower Information")
@@ -30,69 +28,91 @@ if st.button("Evaluate Application"):
 
     API_URL = os.getenv("API_URL")
     if not API_URL:
-        raise RuntimeError("API_URL environment variable not set.")
-
-    response = requests.post(f"{API_URL}/underwrite", json=payload, timeout=60)
+        st.error("API_URL environment variable not set.")
+        st.stop()
+    
+    with st.spinner("Evaluating application..."):
+        response = requests.post(f"{API_URL}/underwrite/", json=payload,timeout=60)
+      
 
     st.subheader("Underwriting Result")
-    if response.status_code == 200:
-        result = response.json()
-        st.success(f"Decision: **{result['decision'].upper()}**")
-        st.write(f"Risk Score: {result.get('risk_score', 'N/A')}")
-        st.write("### Reasons / Factors:")
-        st.json(result["reasons"])
+    if response.status_code != 200:
+        st.error(f"Request failed with status code ({response.status_code}")
+        st.write(response.text)
+        st.stop()
 
+    result = response.json()
+
+    decision = result["decision"].upper()
+    risk_score = result["risk_score", "N/A"]
+
+    if decision == "APPROVED":
+        st.success(f"Decision: {decision}")
+    elif decision == "DENIED":
+        st.error(f"Decision: {decision}")
+    else:
+        st.error(f"Decision: {decision}")
+
+    st.write(f"Risk score: {risk_score}")
+
+    st.subheader("Decision Rationale (Rules Engine)")
+
+    rule_engine = result["explanation"].get("rule_engine", {})
+
+    if decision == "APPROVED":
+        factors = rule_engine.get("approval_factors", [])
+        for f in factors:
+            st.write(f"• {f}")
+
+    elif decision == "REFER":
+        st.write(rule_engine.get("decision_logic", "Manual review required."))
         if result["conditions"]:
-            st.warning("### Conditions for Approval:")
-            st.json(result["conditions"])
+            st.info("Conditions:")
+            for c in result["conditions"]:
+                st.write(f"• {c}")
 
-        st.write("### Full Explanation:")
-        st.json(result["explanation"])
-
-        if "ml_default_probability" in result["explanation"]:
-            ml_prob = result["explanation"]["ml_default_probability"]
-            st.metric(label="ML Predicted Default Probability", value=f"{ml_prob*100:.2f}%")
-        
+    else:
+        st.write(rule_engine.get("decision_logic", "High risk detected."))
 
     
-        st.subheader("Model Explanation (SHAP)")
+    st.subheader("Machine Learning Risk Assessment")
 
-        try:
-            explainer = joblib.load("ml/shap_explainer.pkl")
-            model = joblib.load("ml/mortgage_underwriter_model.pkl")
+    ml_prob = result["explanation"].get("ml_default_probability")
+    if ml_prob is not None:
+        st.metric(
+            label="Predicted Probability of Default",
+            value=f"{ml_prob * 100:.2f}%"
+        )
 
-            input_df = pd.DataFrame([{
-                "credit_score": credit_score,
-                "loan_amount": loan_amount,
-                "property_value": property_value,
-                "monthly_income": annual_income / 12,
-                "monthly_debt": monthly_debt,
-                "employment_status": employment_status
-            }])
+    st.subheader("Why the Model Made This Prediction")
 
-            processed = model["preprocessor"].transform(input_df)
-            shap_values = explainer(processed)
+    explanation_text = result["explanation"].get("explanation_text", [])
 
-            
-            st.write("### Feature Importance (Model Behaviour)")
-            fig1, ax1 = plt.subplots()
-            shap.summary_plot(shap_values[:,:,1],show=False)
-            st.pyplot(fig1)
-            plt.close(fig1)
+    if explanation_text:
+        for line in explanation_text:
+            st.write(f"• {line}")
+    else:
+        st.write("No significant model drivers identified.")
 
-        
-            st.write("### Why This Decision? (Borrower Specific)")
-            single_shap = shap_values[0,:,1] 
-            
-            fig2, ax2 = plt.subplots()
-            shap.plots.waterfall(single_shap, show=False)
-            st.pyplot(fig2)
-            plt.close(fig2)
+   
+    st.subheader("Feature Impact Overview")
 
-        except Exception as e:
-            st.error(f"Waterfall SHAP Error: {e}")
+    shap_data = result["explanation"].get("shap_explanation", {})
+    if shap_data:
+        df = pd.DataFrame(
+            shap_data.items(),
+            columns=["Feature", "Impact"]
+        )
+        st.bar_chart(df.set_index("Feature"))
 
-    else:   
-        st.error(f"Request Failed: {response.status_code}")
-        st.write(response.text)
+   
+    st.markdown("---")
+    st.markdown("""
+    **Model Governance**
+    - Decision Type: Hybrid (Rules + Machine Learning)
+    - Explainability: SHAP-based feature attribution
+    - Human Review: Required for borderline cases
+    - Deployment: API-driven inference (no client-side models)
+    """)
+
 
