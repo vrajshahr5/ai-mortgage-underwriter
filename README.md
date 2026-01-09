@@ -127,9 +127,6 @@ Explainability
 
 API Example
 -
-
-## API Example
-
 ### Sample Request
 
 ```json
@@ -142,12 +139,132 @@ API Example
   "employment_status": "employed"
 }
 
+
+### Sample API Response
+
+```json
+{
+  "decision": "approved",
+  "risk_score": 0,
+  "reasons": [],
+  "conditions": [],
+  "explanation": {
+    "rule_engine": {
+      "approval_factors": [
+        "Strong credit score",
+        "Conservative loan-to-value ratio",
+        "Low debt to income ratio",
+        "Stable employment"
+      ]
+    },
+    "ml_default_probability": 0.0109,
+    "ml_predicted_risk_class": 0,
+    "shap_explanation": {
+      "num__credit_score": -0.4358,
+      "num__loan_amount": -0.0689,
+      "num__property_value": -0.0229,
+      "num__monthly_income": -0.1734,
+      "num__monthly_debt": -0.0275,
+      "cat__employment_status_employed": 0
+    },
+    "explanation_text": [
+      "Credit score strongly reduced predicted default risk",
+      "High income contributed positively to approval",
+      "Loan amount relative to property value was conservative"
+    ]
+  }
+}
 ```
+Technology Stack
+-
+Backend
+-
++ FastAPI
++ Pydantic
++ Uvicorn
++ Joblib
 
+Machine Learning
+-
++ Scikit-learn
++ Pandas
++ NumPy
++ SHAP
++ ColumnTransformer & Pipelines
 
+Frontend
+-
++ Streamlit
++ REST integration via requests
 
+Project Structure
+-
+```text
+AI-Mortgage-Underwriter/
+├── app/
+│   ├── main.py                  # FastAPI entry point
+│   ├── schemas.py               # Pydantic request/response schemas
+│   └── underwriting_engine.py   # Core underwriting logic
+│
+├── ml/
+│   ├── train_model.py            # Model training pipeline
+│   ├── rebuild_shap_explainer.py # SHAP explainer regeneration
+│   ├── mortgage_underwriter_model.pkl  # Trained ML model
+│   └── shap_explainer.pkl        # SHAP explainer artifact
+│
+├── dashboard.py                  # Model explainability dashboard
+└── requirements.txt              # Python dependencies
+```
+Installation
+-
+## Clone the Repository
 
+```bash
+git clone https://github.com/vrajshahr5/AI-Mortgage-Underwriter.git
+cd AI-Mortgage-Underwriter
+```
+ ## Create a Virtual Environment
+```
+python -m venv venv
+```
+## Activate the Environment
+```
+Windows
+venv\Scripts\activate
 
+macOS/Linux
+source venv/bin/activate
+```
+## Install Dependencies
+```
+pip install -r requirements.txt
+```
+## Train the Machine Learning Model
+```
+python -m ml.train_model
+```
+## Start the FastAPI Backend
+```
+uvicorn app.main:app --reload
+```
+### API available 
+```
+http://127.0.0.1:8000
+```
+### Run the Streamlit Frontend
+```
+streamlit run dashboard.py
+```
+### Frontend available
+```
+http://localhost:8501
+```
+Deployment
+-
+Deployment
++ Backend and frontend are independently deployable
++ Communication via HTTPS REST API
++ Deployed using Docker-based infrastructure on Render
 
 
 
