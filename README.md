@@ -266,6 +266,25 @@ Deployment
 + Communication via HTTPS REST API
 + Deployed using Docker-based infrastructure on Render
 
+Live Endpoints
++ FastAPI Backend
+https://ai-mortgage-underwriter.onrender.com
+
++ Sreamlit Dashboard
+https://ai-mortgage-underwriter-dashboard.onrender.com
+
+What this project demonstrates
+-
+This project demonstrates practical machine learning system design in a realistic, production-oriented setting:
+
+- **Applied machine learning in a regulated domain** (financial underwriting)
+- **Hybrid decision system design**, combining deterministic business rules with probabilistic ML models
+- **Explainable AI** using SHAP for transparent, feature-level model attribution
+- **Production-style API architecture** using FastAPI and standardized request/response contracts
+- **Clear frontend–backend separation**, enabling independent deployment and scaling
+- **Model governance considerations**, including interpretability, human review paths, and decision traceability
+
+
 
 
 
