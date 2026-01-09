@@ -1,147 +1,210 @@
 AI Mortgage Underwriter
--
-A production style AI powered mortgage underwriting platform that combines deterministic credit rules, a machine learning risk model, and SHAP based explainability. The system is exposed thorugh a FastAPI backend and evaluated using an interactive Streamlit dashboard.
+Overview
+AI Mortgage Underwriter is a production-style, AI-powered mortgage underwriting platform that combines deterministic credit rules, a machine-learning risk model, and SHAP-based explainability.
 
-The goal of this project is to provide a realistic simulation of an automated underwriting workflow suitable for enterprise or fintech enviornments.
+The system is exposed through a FastAPI backend and evaluated using an interactive Streamlit dashboard, simulating a realistic automated underwriting workflow suitable for enterprise or fintech environments.
 
-Key Features 
--
-Hybrid Decision System Integrates rule based logic with ML predictions,
-Rule based Underwriting engine Evaluates credit score, LTV, DTI, down payement and employment stability,
-Machine Learning Default Risk Predicition Logistic Regression model trained on synthetic borrower data,
-Model Explainabilty Shap visualizations show feature contributions of each borrower,
-Rest API backend FastAPI service for standardized evaluations,
-Interactive Frontend Streamlit dashboard for real time demonstration,
-Model Persistance Trained models and preprocessors are serialized with joblib,
-Extensible Architecture Designed to support additonal models or real datasets in the future.
+This project emphasizes decision transparency, model governance, and system architecture, not just prediction accuracy.
 
-The deterministic engine calculates and applies risk adjustments based on:
-- 
-+ Credit Score 
-+ Loan to Value ratio
-+ Debt to income ratio
-+ Minimum down payment
-+ Employment status
+Key Features
+Hybrid Decision System
+Combines rule-based underwriting logic with machine-learning risk prediction
 
-| Risk Score Range | Result                          |
-|------------------|---------------------------------|
-| ≥ 50             | Application Denied              |
-| 25 – 49          | Refer / Conditional Approval    |
-| < 25             | Application Approved            |
+Ensures deterministic business rules remain enforceable alongside probabilistic models
 
-Machine Learning Model
--
-Algorithm Logistic Regression
-Training Data 5000 synthetic mortgage applications
-Preprocessing Standard scaling for numeric inputs and one hot encoding for categorical inputs
-Outputs Default risk class, Probability of Default, SHAP feature attributions.
+Rule-Based Underwriting Engine
+Evaluates borrower risk using:
+
+Credit score
+
+Loan-to-Value (LTV)
+
+Debt-to-Income (DTI)
+
+Minimum down payment
+
+Employment stability
+
+Machine Learning Default Risk Model
+Algorithm: Logistic Regression
+
+Training Data: 5,000 synthetic mortgage applications
+
+Outputs:
+
+Default risk class
+
+Probability of default
+
+Feature-level SHAP attributions
+
+Explainable AI (XAI)
+SHAP-based feature attribution for every prediction
+
+Human-readable explanation summaries generated server-side
+
+Supports model transparency and regulatory review workflows
+
+REST API Backend
+Built with FastAPI
+
+Strong input validation using Pydantic
+
+Stateless JSON-based inference indication
+
+Interactive Frontend
+Streamlit dashboard for real-time evaluation
+
+Frontend consumes API outputs only (no client-side ML)
+
+Designed for demos, audits, and stakeholder review
+
+Model Persistence & Reproducibility
+Trained models, preprocessors, and SHAP explainers serialized using joblib
+
+Deterministic inference across environments
+
+Extensible Architecture
+Modular design supports:
+
+Additional models
+
+Real datasets
+
+Alternative decision policies
+
+Enterprise scaling patterns
+
+Rule-Based Decision Logic
+Risk Score	Decision
+≥ 50	Application Denied
+25 – 49	Refer / Conditional Approval
+< 25	Application Approved
+Machine Learning Pipeline
+Algorithm: Logistic Regression
+
+Preprocessing:
+
+Standard scaling (numerical features)
+
+One-hot encoding (categorical features)
+
+Explainability:
+
+SHAP feature attribution
+
+Human-readable explanation summaries
 
 API Example
--
+Endpoint
 POST /underwrite
-
-**Sample Request**
-
-```json
+Sample Request
 {
-    "annual_income": 85000,
-    "credit_score": 720,
-    "monthly_debt": 1200,
-    "loan_amount": 300000,
-    "property_value": 420000,
-    "employment_status": "employed"
+  "annual_income": 85000,
+  "credit_score": 720,
+  "monthly_debt": 1200,
+  "loan_amount": 300000,
+  "property_value": 420000,
+  "employment_status": "employed"
 }
-```
-
-**Sample Response**
-
-```json
+Sample Response
 {
-    "decision": "approved",
-    "risk_score": 22,
-    "reasons": ["Credit score between 700 and 749"],
-    "conditions": [],
-    "explanation": {
-        "rule_engine": { "...": "details omitted" },
-        "ml_default_probability": 0.07
-    }
+  "decision": "approved",
+  "risk_score": 22,
+  "reasons": ["Credit score between 700 and 749"],
+  "conditions": [],
+  "explanation": {
+    "rule_engine": { "...": "details omitted" },
+    "ml_default_probability": 0.07
+  }
 }
-```
-
----
-
 Technology Stack
--
-+ FastAPI
-+ Pydantic Models
-+ Uvicorn
-+ Joblib
+Backend
+FastAPI
+
+Pydantic
+
+Uvicorn
+
+Joblib
 
 Machine Learning
--
-+ Scikit-learn
-+ Pandas and Numpy
-+ SHAP
-+ Column Transformer and Pipeline
+Scikit-learn
+
+Pandas
+
+NumPy
+
+SHAP
+
+ColumnTransformer & Pipelines
 
 Frontend
--
-+ Streamlit
-+ HTTP integration with requests
+Streamlit
 
-Setup and Usage
--
-Clone the repository:
+REST integration via requests
 
-```bash
+Setup & Usage
+Clone Repository
 git clone https://github.com/vrajshahr5/AI-Mortgage-Underwriter.git
 cd AI-Mortgage-Underwriter
-```
-```bash
+Create Virtual Environment
 python -m venv venv
 # Windows
 venv\Scripts\activate
-# Linux / macOS
+# macOS / Linux
 source venv/bin/activate
-```
-
-Install dependencies:
-
-```bash
+Install Dependencies
 pip install -r requirements.txt
-```
-
-Train the ML model:
-
-```bash
+Train ML Model
 python -m ml.train_model
-```
-
-Start the FastAPI backend:
-
-```bash
+Start Backend
 uvicorn app.main:app --reload
-```
-
-Run the Streamlit dashboard:
-
-```bash
+Run Frontend
 streamlit run dashboard.py
-```
-
----
-
 Project Structure
--![IMG_3661](https://github.com/user-attachments/assets/53313a9f-5dcf-4459-a908-998fdf2bc2dd)
-
+AI-Mortgage-Underwriter/
+├── app/
+│   ├── main.py
+│   ├── schemas.py
+│   └── underwriting_engine.py
+├── ml/
+│   ├── train_model.py
+│   ├── rebuild_shap_explainer.py
+│   ├── mortgage_underwriter_model.pkl
+│   └── shap_explainer.pkl
+├── dashboard.py
+└── requirements.txt
 Deployment
--
-The Streamlit dashboard communicates with the FastAPI service over HTTPS using JSON REST requests. Both components are independently debloyable and can be tested in isolation. 
+Backend and frontend are independently deployable
 
-+ https://ai-mortgage-underwriter.onrender.com (FastAPI Backend)
-+ https://ai-mortgage-underwriter-dashboard.onrender.com (Streamlit Frontend)
-+ Deployed using Docker container based infrastructure
+Communication via HTTPS REST API
 
+Deployed using Docker-based infrastructure on Render
+
+Live Endpoints
+FastAPI Backend:
+https://ai-mortgage-underwriter.onrender.com
+
+Streamlit Dashboard:
+https://ai-mortgage-underwriter-dashboard.onrender.com
+
+Note: The hosted demo uses a free tier deployment. Under heavier traffic, rate-limiting may occur due to compute-intensive SHAP generation. The system operates without limitation in local or production-grade environments.
+
+Why This Project Matters
+This project demonstrates:
+
+Applied machine learning in a regulated domain
+
+Hybrid decision system design
+
+Explainable AI implementation
+
+Production-style API architecture
+
+Frontend-backend separation
+
+Model governance considerations
 
 
 
