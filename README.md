@@ -125,6 +125,58 @@ Explainability
 
 + Human-readable explanation summaries
 
+API Example
+-
+```json
+{
+  "annual_income": 100000,
+  "credit_score": 720,
+  "monthly_debt": 800,
+  "loan_amount": 200000,
+  "property_value": 450000,
+  "employment_status": "employed"
+}
+
+### Sample API Response
+
+```json
+{
+  "decision": "approved",
+  "risk_score": 0,
+  "reasons": [],
+  "conditions": [],
+  "explanation": {
+    "rule_engine": {
+      "approval_factors": [
+        "Strong credit score",
+        "Conservative loan-to-value ratio",
+        "Low debt to income ratio",
+        "Stable employment"
+      ]
+    },
+    "ml_default_probability": 0.010903612242085818,
+    "ml_predicted_risk_class": 0,
+    "shap_explanation": {
+      "num__credit_score": -0.4358504679203643,
+      "num__loan_amount": -0.06886076382057828,
+      "num__property_value": -0.022864738306929384,
+      "num__monthly_income": -0.17339624403881168,
+      "num__monthly_debt": -0.027520099867555013,
+      "cat__employment_status_employed": 0,
+      "cat__employment_status_unemployed": 0
+    },
+    "explanation_text": [
+      "Feature num__credit_score had a significant impact on the decision.",
+      "Feature num__monthly_income had a significant impact on the decision.",
+      "Feature num__loan_amount had a significant impact on the decision."
+    ]
+  },
+  "ml_risk_score": null
+}
+
+
+
+
 
 
 
