@@ -86,10 +86,27 @@ Extensible Architecture
 
 Rule Based Decision Logic
 -
-Risk Score	Decision   Description
-≥ 50	      Denied	   High-risk applicant
-25–49	      Refer	     Manual review required
-< 25	      Approved	 Acceptable risk profile
+| Category | Condition | Risk Score Adjustment |
+|---------|-----------|-----------------------|
+| Credit Score | < 600 | +50 |
+| Credit Score | 600–699 | +20 |
+| Credit Score | ≥ 700 | 0 |
+| Loan-to-Value (LTV) | > 80% | +30 |
+| Loan-to-Value (LTV) | ≤ 80% | 0 |
+| Debt-to-Income (DTI) | > 40% | +20 |
+| Debt-to-Income (DTI) | ≤ 40% | 0 |
+| Down Payment | < $20,000 | +10 |
+| Employment Status | Unemployed | +15 |
+| Employment Status | Self-employed | +5 |
+| Employment Status | Employed | 0 |
+
+
+| Total Risk Score | Underwriting Decision |
+|------------------|----------------------|
+| ≥ 50 | Denied |
+| 25 – 49 | Refer / Manual Review |
+| < 25 | Approved |
+
 
 
 
