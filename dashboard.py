@@ -37,14 +37,14 @@ if st.button("Evaluate Application"):
 
     st.subheader("Underwriting Result")
     if response.status_code != 200:
-        st.error(f"Request failed with status code ({response.status_code}")
+        st.error(f"Request failed with status code ({response.status_code})")
         st.write(response.text)
         st.stop()
 
     result = response.json()
 
     decision = result["decision"].upper()
-    risk_score = result["risk_score", "N/A"]
+    risk_score = result.get("risk_score", "N/A")
 
     if decision == "APPROVED":
         st.success(f"Decision: {decision}")
